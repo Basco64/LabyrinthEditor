@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sauvez le soldat Po Ping</title>
+    <title>Editeur de labyrinthe</title>
     <link rel="stylesheet" type="text/css" href="main.css" />
     <link
       rel="stylesheet"
@@ -13,13 +13,17 @@
     />
   </head>
   <body>
-    <div id="game"></div>
-    <div class="alert alert-success d-none text-center" role="alert"></div>
-    <label for="IA"> Tete chercheuse : </label>
-    <input type="checkbox" id="IA" onclick="startIA()" />
+    <label for="">Nombre de ligne : </label>
+    <input type="number" id="totalLine" />
+    <label for="">Nombre de colonne : </label>
+    <input type="number" id="totalColumn" />
+    <button class="btn btn-primary" onClick="createLabyrinth()">Créer</button>
 
-    <script src="levels.js"></script>
-    <script src="IA.js"></script>
+    <table id="game"></table>
+    <div class="alert alert-success d-none text-center" role="alert"></div>
+    <button class="btn btn-primary" onclick="save()">Sauvegarder</button>
+
+    <script src="FileSaver.js"></script>
     <script src="main.js "></script>
 
     <script
