@@ -163,7 +163,7 @@ function checkEndOfLevel() {
       content +=
         "<button class='btn btn-primary' onClick='nextLevel()'> Suivant </button>";
     } else {
-      content += "Vous avez gagné ! ";
+      content += "🎉 GG Xipat 🎉 t'es le meilleur!! 🎉";
     }
 
     alert.innerHTML = content;
