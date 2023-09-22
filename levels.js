@@ -4,7 +4,7 @@ const levels = {
     totalLine: 4,
     totalColumn: 4,
     line1: {
-      case1: 5,
+      case1: 11,
       case2: 10,
       case3: 1,
       case4: 7,
@@ -25,7 +25,7 @@ const levels = {
       case1: 14,
       case2: 9,
       case3: 12,
-      case4: 9,
+      case4: 14,
     },
   },
   level2: {

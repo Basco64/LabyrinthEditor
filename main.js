@@ -1,7 +1,8 @@
 const myGame = document.querySelector("#game");
 const alert = document.querySelector(".alert");
+const checkIA = document.querySelector("#IA");
 
-let sizeIMG = 50;
+let sizeIMG = 100;
 
 let totalLine = 4;
 let totalColumn = 4;
@@ -10,7 +11,16 @@ let playerPosition = [0, 0];
 let currentLevel = 0;
 let arrGame = null;
 
+let gameOver = false;
+let isIAOn = false;
+
 nextLevel();
+
+function startIA() {
+  checkIA.setAttribute("disabled", "disabled");
+  isIAOn = true;
+  IA.startIA();
+}
 
 function createCell(image) {
   let cell = {
@@ -92,14 +102,22 @@ function displayLabyrinth(arrGame) {
       content += "<td>";
       content += `<img src='images/${arrGame[i][j].img}.png' />`;
       if (i === totalLine - 1 && j === totalColumn - 1) {
-        let pandaX = 25 + 100 * i;
-        let pandaY = 25 + 100 * j;
-        content += `<img src='images/panda.png' style='width:${sizeIMG}px;height:${sizeIMG}px;position:absolute;left:${pandaY}px;top:${pandaX}px'/>`;
+        let pandaX = sizeIMG / 4 + sizeIMG * i;
+        let pandaY = sizeIMG / 4 + sizeIMG * j;
+        content += `<img src='images/panda.png' style='width:${
+          sizeIMG / 2
+        }px;height:${
+          sizeIMG / 2
+        }px;position:absolute;left:${pandaY}px;top:${pandaX}px'/>`;
       }
       if (i === playerPosition[0] && j === playerPosition[1]) {
-        let bearX = 25 + 100 * playerPosition[0];
-        let bearY = 25 + 100 * playerPosition[1];
-        content += `<img src='images/bear.png' style='width:${sizeIMG}px;height:${sizeIMG}px;position:absolute;left:${bearY}px;top:${bearX}px'/>`;
+        let bearX = 25 + sizeIMG * playerPosition[0];
+        let bearY = 25 + sizeIMG * playerPosition[1];
+        content += `<img src='images/bear.png' style='width:${
+          sizeIMG / 2
+        }px;height:${
+          sizeIMG / 2
+        }px;position:absolute;left:${bearY}px;top:${bearX}px'/>`;
       }
       content += "</td>";
     }
@@ -114,43 +132,49 @@ function getCell(i, j) {
 }
 
 addEventListener("keyup", function (event) {
-  let playerX = playerPosition[0];
-  let playerY = playerPosition[1];
+  if (!isIAOn && !gameOver) {
+    let playerX = playerPosition[0];
+    let playerY = playerPosition[1];
 
-  if ((event.keyCode === 37 || event.keyCode === 81) && playerY > 0) {
-    //left
-    if (getCell(playerPosition[0], playerPosition[1]).left) {
-      playerY--;
+    if ((event.keyCode === 37 || event.keyCode === 81) && playerY > 0) {
+      //left
+      if (getCell(playerPosition[0], playerPosition[1]).left) {
+        playerY--;
+      }
     }
-  }
-  if ((event.keyCode === 38 || event.keyCode === 90) && playerX > 0) {
-    // top
-    if (getCell(playerPosition[0], playerPosition[1]).top) {
-      playerX--;
+    if ((event.keyCode === 38 || event.keyCode === 90) && playerX > 0) {
+      // top
+      if (getCell(playerPosition[0], playerPosition[1]).top) {
+        playerX--;
+      }
     }
-  }
-  if (
-    (event.keyCode === 39 || event.keyCode === 68) &&
-    playerY < totalColumn - 1
-  ) {
-    // right
-    if (getCell(playerPosition[0], playerPosition[1]).right) {
-      playerY++;
+    if (
+      (event.keyCode === 39 || event.keyCode === 68) &&
+      playerY < totalColumn - 1
+    ) {
+      // right
+      if (getCell(playerPosition[0], playerPosition[1]).right) {
+        playerY++;
+      }
     }
-  }
-  if (
-    (event.keyCode === 40 || event.keyCode === 83) &&
-    playerX < totalLine - 1
-  ) {
-    // bottom
-    if (getCell(playerPosition[0], playerPosition[1]).bottom) {
-      playerX++;
+    if (
+      (event.keyCode === 40 || event.keyCode === 83) &&
+      playerX < totalLine - 1
+    ) {
+      // bottom
+      if (getCell(playerPosition[0], playerPosition[1]).bottom) {
+        playerX++;
+      }
     }
+    playerPosition = [playerX, playerY];
+    move();
   }
-  playerPosition = [playerX, playerY];
+});
+
+function move() {
   displayLabyrinth(arrGame);
   checkEndOfLevel();
-});
+}
 
 function checkEndOfLevel() {
   if (
@@ -163,11 +187,12 @@ function checkEndOfLevel() {
       content +=
         "<button class='btn btn-primary' onClick='nextLevel()'> Suivant </button>";
     } else {
-      content += "🎉 GG Xipat 🎉 t'es le meilleur!! 🎉";
+      content += "🎉 Vous avez gagné ! 🎉 ";
     }
 
     alert.innerHTML = content;
     alert.classList.remove("d-none");
+    gameOver = true;
   }
 }
 
@@ -185,6 +210,12 @@ function nextLevel() {
 
 function loadLevel() {
   let arrLevel = [];
+  isIAOn = false;
+  gameOver = false;
+  IA.pastPosition = new Array();
+  IA.blockedPosition = new Array();
+  checkIA.removeAttribute("disabled");
+  checkIA.checked = false;
 
   for (let i = 1; i <= levels["level" + currentLevel].totalLine; i++) {
     let line = [];
